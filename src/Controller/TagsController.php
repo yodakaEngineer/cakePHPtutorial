@@ -106,4 +106,14 @@ class TagsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+    
+    public function isAuthorized($user)
+    {
+        $action = $this->request->getParam('action');
+        // add および edit アクションは、常にログインしているユーザーに許可されます。
+        if (in_array($action, ['add', 'edit','delete'])) {
+            return true;
+        }
+    }
 }

@@ -66,4 +66,16 @@ class PagesController extends AppController
             throw new NotFoundException();
         }
     }
+    
+    
+    public function find($title){
+        $article = $this->Articles->findByTitle($title);
+        if ($this->request->is(['post', 'put'])) {
+            $this->Articles->patchEntity($article, $this->request->getData());
+            if ($this->Articles->save($article)) {
+                return $this->redirect(['action' => 'display']);
+            }
+            $this->Flash->error(__('errorだよ'));
+        }
+    }
 }
