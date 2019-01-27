@@ -4,19 +4,6 @@
  * @var \App\Model\Entity\Article $article
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Article'), ['action' => 'edit', $article->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Article'), ['action' => 'delete', $article->id], ['confirm' => __('Are you sure you want to delete # {0}?', $article->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Articles'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Article'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Tags'), ['controller' => 'Tags', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Tag'), ['controller' => 'Tags', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
 <div class="articles view large-9 medium-8 columns content">
     <h3><?= h($article->title) ?></h3>
     <table class="vertical-table">
@@ -49,7 +36,16 @@
             <td><?= $article->published ? __('Yes') : __('No'); ?></td>
         </tr>
     </table>
-    <div class="row"><p class="text-right"><?= $this->Html->link('この記事を編集する', ['action' => 'edit', $article->slug]) ?></p></div>
+    <div class="row">
+        <p class="text-right"><?= $this->Html->link('この記事を編集する', ['action' => 'edit', $article->slug]) ?></p>
+    </div>
+    <div class="row">
+        <div class="text-right">
+        <?= $this->Form->postLink(
+            'この記事を削除する',
+            ['action' => 'delete', $article->slug],
+            ['confirm' => '消しちゃうよ？？後悔しない？？'])?></div>
+        </div>
     <div class="row">
         <h4><?= __('Body') ?></h4>
         <?= $this->Text->autoParagraph(h($article->body)); ?>

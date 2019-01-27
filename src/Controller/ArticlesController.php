@@ -12,6 +12,12 @@ use App\Controller\AppController;
  */
 class ArticlesController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow(['tags']);
+    }
+
 
     /**
      * Index method
@@ -37,7 +43,7 @@ class ArticlesController extends AppController
      */
     public function view($slug = null)
     {
-        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        $article = $this->Articles->findBySlug($slug)->contain('Tags')->firstOrFail();
         $this->set(compact('article'));
     }
 
@@ -51,6 +57,7 @@ class ArticlesController extends AppController
         $article = $this->Articles->newEntity();
         if ($this->request->is('post')) {
             $article = $this->Articles->patchEntity($article, $this->request->getData());
+            $article->user_id = $this->Auth->user('id');
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
 
@@ -72,9 +79,16 @@ class ArticlesController extends AppController
      */
     public function edit($slug = null)
     {
-        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        $article = $this->Articles
+            ->findBySlug($slug)
+            ->contain('Tags')
+            ->firstOrFail();
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $article = $this->Articles->patchEntity($article, $this->request->getData());
+            $article = $this->Articles->patchEntity($article, $this->request->getData(),[
+                // 追加: user_id の更新を無効化
+                'accessibleFields' => ['user_id' => false],
+                'associated' => ['Tags']
+                ]);
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
 
@@ -94,10 +108,10 @@ class ArticlesController extends AppController
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($slug = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $article = $this->Articles->get($id);
+        $article = $this->Articles->findBySlug($slug)->firstOrFail();
         if ($this->Articles->delete($article)) {
             $this->Flash->success(__('The article has been deleted.'));
         } else {
@@ -106,4 +120,52 @@ class ArticlesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+    public function tags(...$tags)
+    {
+        // ArticlesTable を使用してタグ付きの記事を検索します。
+        $articles = $this->Articles->find('tagged', [
+            'tags' => $tags
+        ]);
+        
+        // 変数をビューテンプレートのコンテキストに渡します。
+        $this->set(compact('articles','tags'));
+    }
+
+
+
+    public function isAuthorized($user)
+    {
+        $action = $this->request->getParam('action');
+        // add および tags アクションは、常にログインしているユーザーに許可されます。
+        if (in_array($action, ['add', 'tags','delete'])) {
+            return true;
+        }
+        
+        // 他のすべてのアクションにはスラッグが必要です。
+        $slug = $this->request->getParam('pass.0');
+        if (!$slug) {
+            return false;
+        }
+        
+        // 記事が現在のユーザーに属していることを確認します。
+        $article = $this->Articles->findBySlug($slug)->first();
+        
+        return $article->user_id === $user['id'];
+    }
+    
+    
+    // public function find(){
+    //     $title = $this->request->data('title');
+    //     $article = $this->Articles->find('all')->where([
+    //         'Articles.title' = $title
+    //         ]);
+    //     if ($this->request->is(['post', 'put'])) {
+    //         $this->Articles->patchEntity($article, $this->request->getData());
+    //         if ($this->Articles->save($article)) {
+    //             return $this->redirect(['action' => 'display']);
+    //         }
+    //         $this->Flash->error(__('errorだよ'));
+    //     }
+    // }
 }

@@ -42,31 +42,14 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         </ul>
         <div class="top-bar-section">
             <ul class="right">
-                <li><a target="_blank" href="">hoge</a></li>
-                <li><a target="_blank" href="">sample</a></li>
+                <li><a target="_blank" href="https://book.cakephp.org/3.0/">Documentation</a></li>
+                <li><a target="_blank" href="https://api.cakephp.org/3.0/">API</a></li>
             </ul>
         </div>
     </nav>
     <?= $this->Flash->render() ?>
-    <nav class="large-3 medium-4 columns" id="actions-sidebar">
-        <ul class="side-nav">
-            <li class="heading"><?= __('Menu') ?></li>
-            <ul class="side-nav">
-                <?php if (isset($user)) {?>
-                    <li><?= $this->Html->link(__('新規投稿'), ['controller' => 'Articles','action' => 'add']) ?></li>
-                    <li><?= $this->Html->link(__('記事一覧'), ['controller' => 'Articles','action' => 'index']) ?></li>
-                    <li><?= $this->Html->link(__('ユーザーリスト'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-                    <li><?= $this->Html->link(__('新規タグ作成'), ['controller' => 'Tags', 'action' => 'add']) ?></li>
-                    <li><?= $this->Html->link(__('タグリスト'), ['controller' => 'Tags', 'action' => 'index']) ?></li>
-                    <li><?= $this->Html->link(__('ログアウト'), ['controller' => 'Users', 'action' => 'logout']) ?></li>
-                <?php }else{ ?>
-                    <li><?= $this->Html->link(__('新規登録'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-                    <li><?= $this->Html->link(__('ログイン'), ['controller' => 'Users', 'action' => 'login']) ?></li>
-                <?php } ?>
-            </ul>
-        </ul>
-    </nav>
-    <?= $this->fetch('content') ?>
+    <div class="container clearfix">
+        <?= $this->fetch('content') ?>
     </div>
     <footer>
     </footer>
