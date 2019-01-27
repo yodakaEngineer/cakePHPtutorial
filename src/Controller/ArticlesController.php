@@ -153,4 +153,19 @@ class ArticlesController extends AppController
         
         return $article->user_id === $user['id'];
     }
+    
+    
+    // public function find(){
+    //     $title = $this->request->data('title');
+    //     $article = $this->Articles->find('all')->where([
+    //         'Articles.title' = $title
+    //         ]);
+    //     if ($this->request->is(['post', 'put'])) {
+    //         $this->Articles->patchEntity($article, $this->request->getData());
+    //         if ($this->Articles->save($article)) {
+    //             return $this->redirect(['action' => 'display']);
+    //         }
+    //         $this->Flash->error(__('errorだよ'));
+    //     }
+    // }
 }
