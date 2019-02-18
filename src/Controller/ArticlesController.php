@@ -56,7 +56,10 @@ class ArticlesController extends AppController
     {
         $article = $this->Articles->newEntity();
         if ($this->request->is('post')) {
-            $article = $this->Articles->patchEntity($article, $this->request->getData());
+            $article = $this->Articles->newEntity($this->request->getData(),[
+                'associated' => ['Tags']
+                ]);
+            $article->tag_string = $this->request->getData('tag_string');
             $article->user_id = $this->Auth->user('id');
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('The article has been saved.'));
@@ -66,8 +69,7 @@ class ArticlesController extends AppController
             $this->Flash->error(__('The article could not be saved. Please, try again.'));
         }
         $users = $this->Articles->Users->find('list', ['limit' => 200]);
-        $tags = $this->Articles->Tags->find('list', ['limit' => 200]);
-        $this->set(compact('article', 'users', 'tags'));
+        $this->set(compact('article', 'users'));
     }
 
     /**

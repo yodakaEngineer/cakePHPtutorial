@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Article $article
  */
+ var_dump($article);
 ?>
 <div class="articles form large-9 medium-8 columns content">
     <?= $this->Form->create($article) ?>

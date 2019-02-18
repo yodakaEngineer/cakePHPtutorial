@@ -65,7 +65,6 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $this->set(compact('user'));
     }
 
     /**
@@ -122,7 +121,6 @@ class UsersController extends AppController
                 $this->Auth->setUser($user);
                 return $this->redirect($this->Auth->redirectUrl());
             }
-            $this->Flash->error('ユーザー名またはパスワードが不正です。');
         }
     }
     
@@ -130,7 +128,6 @@ class UsersController extends AppController
     
     public function logout()
     {
-        $this->Flash->success('ログアウトしました。');
         return $this->redirect($this->Auth->logout());
     }
 }
